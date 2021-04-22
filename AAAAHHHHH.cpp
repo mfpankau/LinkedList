@@ -1,6 +1,3 @@
-// AAAAHHHHH.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <string>
 using namespace std;
@@ -11,9 +8,9 @@ namespace bad
     struct Node
     {
         int index;
-        string value;
+        void* value;
         Node* next;
-        Node(string val) : value(val) {}
+        Node(void* val) : value(val) {}
     };
 
     class LList
@@ -22,13 +19,13 @@ namespace bad
         int length;
         Node* n1;
         //create new list with given value as first element
-        LList(string val)
+        LList(void* val)
         {
             n1 = new Node(val);
             length = 1;
         }
-        //get element by given index
-        Node* getElementByIndex(int index)
+        //get node by given index
+        Node* getNodeByIndex(int index)
         {
             if (index > length - 1)
             {
@@ -45,7 +42,7 @@ namespace bad
         //add given node at the end of list
         void add(Node* node)
         {
-            Node* curLast = getElementByIndex(length - 1);
+            Node* curLast = getNodeByIndex(length - 1);
             curLast->next = node;
             curLast->index = length - 1;
             node->index = length;
@@ -55,8 +52,8 @@ namespace bad
         //shifts that current index and everything past it by one
         void add(Node* node, int index)
         {
-            Node* prevNode = getElementByIndex(index - 1);
-            Node* nextNode = getElementByIndex(index);
+            Node* prevNode = getNodeByIndex(index - 1);
+            Node* nextNode = getNodeByIndex(index);
             prevNode->next = node;
             node->next = nextNode;
             length++;
@@ -64,9 +61,9 @@ namespace bad
         //remove element at given index
         void remove(int index)
         {
-            
-            Node* itemToRemove = getElementByIndex(index);
-            Node* prevNode = getElementByIndex(index - 1);
+
+            Node* itemToRemove = getNodeByIndex(index);
+            Node* prevNode = getNodeByIndex(index - 1);
             prevNode->next = itemToRemove->next;
             if (index >= length - 1)
             {
@@ -88,12 +85,15 @@ namespace bad
 
 int main()
 {
-    bad::LList list = bad::LList("7");
-    list.add(new bad::Node("stuff"));
-    list.add(new bad::Node("stuff2"));
-    list.add(new bad::Node("17"), 1);
+    string x = "shrek";
+    string n = "bob";
+    bad::LList list = bad::LList(&x);
+    list.add(new bad::Node(&n));
+    list.add(new bad::Node((string*)"stuff2"));
+    list.add(new bad::Node((string*)"yes"), 1);
     list.remove(7);
     cout << "length: " << list.length << endl;
-    cout << "list 1: " << list.getElementByIndex(7)->value;
+    string* temp = (string*)list.getNodeByIndex(0)->value;
+    cout << "list 1: " << *(string*)list.getNodeByIndex(0)->value;
     return 0;
 }
